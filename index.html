@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motivationstrias – nach Tom Küchler</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #1e5799;
+      --blue-dk: #163f70;
+      --orange:  #c96d0a;
+      --green:   #2a7f52;
+      --bg:      #f3f0ea;
+      --card:    #ffffff;
+      --text:    #2c2c2c;
+      --muted:   #6f6f6f;
+      --border:  #ddd;
+      --rad:     14px;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 28px 18px 50px;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .header h1 {
+      font-size: 2.1rem;
+      color: var(--blue);
+      letter-spacing: -0.5px;
+      font-weight: 800;
+    }
+    .header .subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    /* ── Cards ──────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border-radius: var(--rad);
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 14px rgba(0,0,0,.07);
+    }
+    .card-title {
+      font-size: 1.0rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid #eef2f8;
+      padding-bottom: 10px;
+    }
+
+    /* ── Form fields ─────────────────────────────── */
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .row-2 { grid-template-columns: 1fr; } }
+
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 6px;
+    }
+    .field input[type="text"],
+    .field input[type="date"],
+    .field textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.96rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #fafafa;
+      transition: border-color .2s, background .2s;
+      resize: vertical;
+    }
+    .field input:focus, .field textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: #fff;
+    }
+    .field textarea { height: 66px; }
+
+    /* ── Diagram ─────────────────────────────────── */
+    .diagram-hint {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+    .diagram-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    #svgDiagram {
+      width: 100%;
+      max-width: 440px;
+      cursor: crosshair;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    /* ── Sliders ─────────────────────────────────── */
+    .sliders-section {
+      margin-top: 24px;
+      border-top: 2px solid #eef2f8;
+      padding-top: 22px;
+    }
+    .sliders-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 20px;
+    }
+
+    .slider-item { margin-bottom: 24px; }
+    .slider-item:last-child { margin-bottom: 0; }
+
+    .slider-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 3px;
+    }
+    .slider-name {
+      font-weight: 800;
+      font-size: 1.0rem;
+    }
+    .slider-num {
+      font-size: 1.7rem;
+      font-weight: 900;
+      min-width: 34px;
+      text-align: right;
+      line-height: 1;
+    }
+    .slider-question {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 8px;
+      line-height: 1.45;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #e4e4e4;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,.25);
+      cursor: grab;
+      transition: transform .1s;
+    }
+    input[type=range]:active::-webkit-slider-thumb { transform: scale(1.15); cursor: grabbing; }
+    input[type=range]::-moz-range-thumb {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,.25);
+      cursor: grab;
+    }
+
+    /* Axis-specific colors */
+    .ax-zuversicht .slider-name { color: var(--orange); }
+    .ax-zuversicht .slider-num  { color: var(--orange); }
+    .ax-zuversicht input[type=range] { accent-color: var(--orange); }
+    .ax-zuversicht input[type=range]::-webkit-slider-thumb { background: var(--orange); }
+    .ax-zuversicht input[type=range]::-moz-range-thumb { background: var(--orange); }
+
+    .ax-wichtig .slider-name { color: var(--blue); }
+    .ax-wichtig .slider-num  { color: var(--blue); }
+    .ax-wichtig input[type=range] { accent-color: var(--blue); }
+    .ax-wichtig input[type=range]::-webkit-slider-thumb { background: var(--blue); }
+    .ax-wichtig input[type=range]::-moz-range-thumb { background: var(--blue); }
+
+    .ax-dringlich .slider-name { color: var(--green); }
+    .ax-dringlich .slider-num  { color: var(--green); }
+    .ax-dringlich input[type=range] { accent-color: var(--green); }
+    .ax-dringlich input[type=range]::-webkit-slider-thumb { background: var(--green); }
+    .ax-dringlich input[type=range]::-moz-range-thumb { background: var(--green); }
+
+    /* ── Results ─────────────────────────────────── */
+    .results-card { background: linear-gradient(135deg, #f0f5fc 0%, #fff 100%); }
+
+    .result-row {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      margin-bottom: 20px;
+    }
+    .result-pct {
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: var(--blue);
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .result-pct-sign { font-size: 1.6rem; font-weight: 700; }
+    .bar-wrap { flex: 1; }
+    .bar-track {
+      height: 20px;
+      background: #e0e8f5;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      border-radius: 10px;
+      transition: width .45s cubic-bezier(.4,0,.2,1);
+      min-width: 0;
+    }
+    .bar-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .val-grid {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .val-chip {
+      flex: 1;
+      text-align: center;
+      padding: 10px 8px;
+      border-radius: 10px;
+      background: #f7f7f7;
+    }
+    .val-chip-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      margin-bottom: 3px;
+    }
+    .val-chip-num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .val-chip.ax-zuversicht { background: #fff4ea; }
+    .val-chip.ax-zuversicht .val-chip-label,
+    .val-chip.ax-zuversicht .val-chip-num { color: var(--orange); }
+    .val-chip.ax-wichtig { background: #edf2fb; }
+    .val-chip.ax-wichtig .val-chip-label,
+    .val-chip.ax-wichtig .val-chip-num { color: var(--blue); }
+    .val-chip.ax-dringlich { background: #edf7f2; }
+    .val-chip.ax-dringlich .val-chip-label,
+    .val-chip.ax-dringlich .val-chip-num { color: var(--green); }
+
+    .interpretation {
+      background: white;
+      border-left: 4px solid var(--blue);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: #3a3a3a;
+      box-shadow: 0 1px 6px rgba(0,0,0,.06);
+    }
+
+    /* ── Action buttons ──────────────────────────── */
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 13px 30px;
+      border: none;
+      border-radius: 9px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { background: var(--blue-dk); }
+    .btn-secondary {
+      background: #e8edf5;
+      color: var(--blue);
+    }
+    .btn-secondary:hover { background: #d8e2f0; }
+
+    /* ── Attribution ─────────────────────────────── */
+    .attribution {
+      text-align: center;
+      font-size: 0.73rem;
+      color: #bbb;
+      margin-top: 28px;
+    }
+    .attribution a { color: #bbb; }
+
+    /* ── Print ───────────────────────────────────── */
+    @media print {
+      body { background: white; }
+      .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+      .actions, .diagram-hint { display: none; }
+      .page { padding: 8px; }
+      #svgDiagram { max-width: 360px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <h1>Motivationstrias</h1>
+    <p class="subtitle">nach Tom Küchler &nbsp;·&nbsp; Tool zur Reflexion der Veränderungsmotivation</p>
+  </header>
+
+  <!-- ── Persönliche Angaben ── -->
+  <div class="card">
+    <div class="card-title">👤 Angaben</div>
+    <div class="row-2">
+      <div class="field">
+        <label>Name</label>
+        <input type="text" id="nameInput" placeholder="Name des / der Ratsuchenden">
+      </div>
+      <div class="field">
+        <label>Datum</label>
+        <input type="date" id="dateInput">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Ziel ── -->
+  <div class="card">
+    <div class="card-title">🎯 Mein Ziel</div>
+    <div class="field">
+      <label>Veränderungswunsch / Ziel</label>
+      <input type="text" id="goalInput" placeholder="Was ist mein Ziel? Wohin soll die Reise gehen?">
+    </div>
+    <div class="field">
+      <label>Wozu soll das gut sein? (übergeordneter Sinn)</label>
+      <textarea id="purposeInput" placeholder="Was ist der übergeordnete Sinn dieses Ziels?"></textarea>
+    </div>
+  </div>
+
+  <!-- ── Diagramm + Regler ── -->
+  <div class="card">
+    <div class="card-title">📐 Motivationsdiagramm</div>
+    <p class="diagram-hint">Klicke direkt auf eine Achse im Diagramm oder nutze die Regler unten.</p>
+
+    <div class="diagram-wrap">
+      <svg id="svgDiagram" viewBox="0 0 600 540"></svg>
+    </div>
+
+    <!-- Sliders -->
+    <div class="sliders-section">
+      <div class="sliders-title">Meine Einschätzung · Skala 1–10</div>
+
+      <div class="slider-item ax-zuversicht">
+        <div class="slider-top">
+          <span class="slider-name">zuversichtlich</span>
+          <span class="slider-num" id="numZuversicht">5</span>
+        </div>
+        <div class="slider-question">
+          „Wie zuversichtlich bin ich, mein Ziel zu erreichen?"
+          <br>1 = sehr wenig Vertrauen in Erfolg &nbsp;·&nbsp; 10 = absolut zuversichtlich
+        </div>
+        <input type="range" id="sliderZuversicht" min="1" max="10" value="5" step="1">
+      </div>
+
+      <div class="slider-item ax-wichtig">
+        <div class="slider-top">
+          <span class="slider-name">wichtig</span>
+          <span class="slider-num" id="numWichtig">5</span>
+        </div>
+        <div class="slider-question">
+          „Wie wichtig / attraktiv ist mir dieses Ziel?"
+          <br>1 = kaum wichtig &nbsp;·&nbsp; 10 = absolut wichtig, höchste Attraktivität
+        </div>
+        <input type="range" id="sliderWichtig" min="1" max="10" value="5" step="1">
+      </div>
+
+      <div class="slider-item ax-dringlich">
+        <div class="slider-top">
+          <span class="slider-name">dringlich</span>
+          <span class="slider-num" id="numDringlich">5</span>
+        </div>
+        <div class="slider-question">
+          „Wie dringlich ist mir die Veränderung?"
+          <br>1 = „irgendwann" &nbsp;·&nbsp; 10 = „jetzt sofort", maximale Bereitschaft
+        </div>
+        <input type="range" id="sliderDringlich" min="1" max="10" value="5" step="1">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Ergebnis ── -->
+  <div class="card results-card">
+    <div class="card-title">📊 Meine Motivationsfläche</div>
+
+    <div class="result-row">
+      <div class="result-pct">
+        <span id="pctDisplay">--</span><span class="result-pct-sign">%</span>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-track">
+          <div class="bar-fill" id="barFill" style="width:0%"></div>
+        </div>
+        <div class="bar-label">der maximalen Motivationsfläche</div>
+      </div>
+    </div>
+
+    <div class="val-grid">
+      <div class="val-chip ax-zuversicht">
+        <div class="val-chip-label">zuversichtlich</div>
+        <div class="val-chip-num" id="chipZ">5</div>
+      </div>
+      <div class="val-chip ax-wichtig">
+        <div class="val-chip-label">wichtig</div>
+        <div class="val-chip-num" id="chipW">5</div>
+      </div>
+      <div class="val-chip ax-dringlich">
+        <div class="val-chip-label">dringlich</div>
+        <div class="val-chip-num" id="chipD">5</div>
+      </div>
+    </div>
+
+    <div class="interpretation" id="interpretation">
+      Trage deine Werte ein, um deine persönliche Motivationsfläche zu berechnen.
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-secondary" onclick="resetValues()">↺ Zurücksetzen</button>
+    <button class="btn btn-primary" onclick="window.print()">🖨️ Drucken / Als PDF speichern</button>
+  </div>
+
+  <div class="attribution">
+    Motivationstrias nach Tom Küchler &nbsp;·&nbsp;
+    <a href="https://urldefense.com/v3/__https://www.potenzialentfaltung.org/motivationstrias/__;!!PkhW2ThN!ZSGgbBoxukiDtcfIwMilJJAmX4kC4zSywZHn8YK-YMij_Mr3HcdQetR52A0GMUzZcI2sV406jJ0Lv2Zrb2VNY9ppYurKcwiTE1vvEg$" target="_blank">potenzialentfaltung.org</a>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════
+   CONFIGURATION
+═══════════════════════════════════════════════════ */
+const CX = 300, CY = 275, R = 162;
+const NS = 'http://www.w3.org/2000/svg';
+
+const AXES = [
+  {
+    key: 'Z',
+    sliderId: 'sliderZuversicht',
+    numId:    'numZuversicht',
+    chipId:   'chipZ',
+    label:    'zuversichtlich',
+    sub:      ['Vertrauen in Erfolg'],
+    angle:    -Math.PI / 2,      // top
+    color:    '#c96d0a',
+    fill:     'rgba(201,109,10,.18)'
+  },
+  {
+    key: 'W',
+    sliderId: 'sliderWichtig',
+    numId:    'numWichtig',
+    chipId:   'chipW',
+    label:    'wichtig',
+    sub:      ['Attraktivität', 'des Ziels'],
+    angle:    5 * Math.PI / 6,   // 150° = bottom-left
+    color:    '#1e5799',
+    fill:     'rgba(30,87,153,.18)'
+  },
+  {
+    key: 'D',
+    sliderId: 'sliderDringlich',
+    numId:    'numDringlich',
+    chipId:   'chipD',
+    label:    'dringlich',
+    sub:      ['Bereitschaft zur', 'Veränderung'],
+    angle:    Math.PI / 6,       // 30° = bottom-right
+    color:    '#2a7f52',
+    fill:     'rgba(42,127,82,.18)'
+  }
+];
+
+/* ═══════════════════════════════════════════════════
+   SVG HELPERS
+═══════════════════════════════════════════════════ */
+function el(tag, attrs = {}, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+function axisPoint(i, val) {
+  const t = Math.max(0, (val - 1) / 9);
+  return {
+    x: CX + t * R * Math.cos(AXES[i].angle),
+    y: CY + t * R * Math.sin(AXES[i].angle)
+  };
+}
+
+function triArea(p0, p1, p2) {
+  return Math.abs(
+    (p1.x - p0.x) * (p2.y - p0.y) -
+    (p2.x - p0.x) * (p1.y - p0.y)
+  ) / 2;
+}
+
+/* ═══════════════════════════════════════════════════
+   DRAW
+═══════════════════════════════════════════════════ */
+function drawDiagram(vals) {
+  const svg = document.getElementById('svgDiagram');
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+  /* ── Background grid (concentric triangles) ── */
+  for (let v = 2; v <= 10; v += 2) {
+    const pts = AXES.map((_, i) => { const p = axisPoint(i, v); return `${p.x},${p.y}`; }).join(' ');
+    svg.appendChild(el('polygon', {
+      points: pts,
+      fill:   'none',
+      stroke: v === 10 ? '#b8b8b8' : '#e6e6e6',
+      'stroke-width': v === 10 ? 1.5 : 0.9,
+      'stroke-dasharray': v < 10 ? '4 3' : ''
+    }));
+  }
+
+  /* ── Scale numbers along top (Zuversicht) axis ── */
+  for (let v = 2; v <= 10; v += 2) {
+    const p = axisPoint(0, v);
+    svg.appendChild(el('text', {
+      x: p.x - 11,
+      y: p.y + 1,
+      'text-anchor':       'end',
+      'dominant-baseline': 'middle',
+      'font-size':         9,
+      'font-family':       'Segoe UI, Arial, sans-serif',
+      fill: '#b0b0b0',
+      'pointer-events': 'none'
+    }, String(v)));
+  }
+
+  /* ── Axis lines ── */
+  AXES.forEach((ax, i) => {
+    const outer = axisPoint(i, 10);
+    svg.appendChild(el('line', {
+      x1: CX, y1: CY, x2: outer.x, y2: outer.y,
+      stroke: '#c4c4c4', 'stroke-width': 1.8
+    }));
+    // Tick marks
+    for (let v = 1; v <= 10; v++) {
+      const p = axisPoint(i, v);
+      svg.appendChild(el('circle', {
+        cx: p.x, cy: p.y,
+        r:  v % 5 === 0 ? 3.5 : 2,
+        fill: v % 5 === 0 ? '#a0a0a0' : '#d8d8d8',
+        'pointer-events': 'none'
+      }));
+    }
+  });
+
+  /* ── Motivation area (triangle) ── */
+  const motPts = AXES.map((_, i) => { const p = axisPoint(i, vals[i]); return `${p.x},${p.y}`; }).join(' ');
+  svg.appendChild(el('polygon', {
+    points: motPts,
+    fill:   'rgba(30,87,153,.15)',
+    stroke: '#1e5799',
+    'stroke-width':    2.8,
+    'stroke-linejoin': 'round',
+    'pointer-events':  'none'
+  }));
+
+  /* ── Axis labels ── */
+  AXES.forEach((ax, i) => {
+    const dist    = R + 40;
+    const subDist = i === 0 ? R + 64 : R + 100;
+    const cos = Math.cos(ax.angle);
+    const sin = Math.sin(ax.angle);
+    const lx = CX + dist * cos;
+    const ly = CY + dist * sin;
+    const sx = CX + subDist * cos;
+    const sy = CY + subDist * sin;
+
+    const ta = cos > 0.25 ? 'start' : cos < -0.25 ? 'end' : 'middle';
+    const db = sin < -0.2  ? 'auto' : 'hanging';
+
+    svg.appendChild(el('text', {
+      x: lx, y: ly,
+      'text-anchor': ta, 'dominant-baseline': db,
+      'font-size': 14, 'font-weight': '900',
+      'font-family': 'Segoe UI, Arial, sans-serif',
+      fill: ax.color, 'pointer-events': 'none',
+      'letter-spacing': '.5',
+      stroke: 'white', 'stroke-width': '5', 'paint-order': 'stroke fill'
+    }, ax.label));
+
+    const subEl = el('text', {
+      x: sx, y: sy,
+      'text-anchor': ta, 'dominant-baseline': db,
+      'font-size': 10, 'font-weight': '600',
+      'font-family': 'Segoe UI, Arial, sans-serif',
+      fill: '#555', 'pointer-events': 'none',
+      stroke: 'white', 'stroke-width': '4', 'paint-order': 'stroke fill'
+    });
+    ax.sub.forEach((line, li) => {
+      const ts = document.createElementNS(NS, 'tspan');
+      ts.setAttribute('x', sx);
+      ts.setAttribute('dy', li === 0 ? '0' : '13');
+      ts.textContent = line;
+      subEl.appendChild(ts);
+    });
+    svg.appendChild(subEl);
+  });
+
+  /* ── Dots with value numbers ── */
+  AXES.forEach((ax, i) => {
+    const p = axisPoint(i, vals[i]);
+    svg.appendChild(el('circle', {
+      cx: p.x, cy: p.y, r: 14,
+      fill: ax.color, stroke: '#fff', 'stroke-width': 3,
+      'pointer-events': 'none'
+    }));
+    svg.appendChild(el('text', {
+      x: p.x, y: p.y,
+      'text-anchor': 'middle', 'dominant-baseline': 'central',
+      'font-size': 11.5, 'font-weight': '900',
+      'font-family': 'Segoe UI, Arial, sans-serif',
+      fill: '#fff', 'pointer-events': 'none'
+    }, String(vals[i])));
+  });
+
+  /* ── Center dot ── */
+  svg.appendChild(el('circle', { cx: CX, cy: CY, r: 4.5, fill: '#bbb', 'pointer-events': 'none' }));
+
+  /* ── "1" label at center ── */
+  svg.appendChild(el('text', {
+    x: CX + 9, y: CY,
+    'text-anchor': 'start', 'dominant-baseline': 'middle',
+    'font-size': 9, 'font-family': 'Segoe UI, Arial, sans-serif',
+    fill: '#c0c0c0', 'pointer-events': 'none'
+  }, '1'));
+}
+
+/* ═══════════════════════════════════════════════════
+   CALCULATION
+═══════════════════════════════════════════════════ */
+function calcPct(vals) {
+  const pts    = vals.map((v, i) => axisPoint(i, v));
+  const maxPts = [0,1,2].map(i => axisPoint(i, 10));
+  const area    = triArea(pts[0], pts[1], pts[2]);
+  const maxArea = triArea(maxPts[0], maxPts[1], maxPts[2]);
+  return maxArea > 0 ? Math.round(area / maxArea * 100) : 0;
+}
+
+function interpret(pct, vals) {
+  const minVal  = Math.min(...vals);
+  const minIdx  = vals.indexOf(minVal);
+  const minName = AXES[minIdx].label.charAt(0) + AXES[minIdx].label.slice(1).toLowerCase();
+
+  if (pct >= 80) {
+    return `Deine Motivationsfläche ist sehr groß (${pct} %). Alle drei Aspekte sind stark ausgeprägt – das deutet auf eine hohe Wahrscheinlichkeit hin, das Ziel zu erreichen. Prima Ausgangslage! Was brauchst du als nächsten Schritt?`;
+  }
+  if (pct >= 55) {
+    return `Deine Motivationsfläche ist gut (${pct} %). Eine Veränderung erscheint wahrscheinlich. Besonders der Bereich „${minName}" (Wert: ${minVal}) bietet noch Entwicklungspotenzial. Was könnte diesen Wert auf die nächste Stufe heben?`;
+  }
+  if (pct >= 30) {
+    return `Deine Motivationsfläche ist mittelgroß (${pct} %). Es lohnt sich, alle drei Aspekte zu beleuchten – besonders „${minName}" (Wert: ${minVal}). Was wäre ein erster kleiner Schritt, um hier mehr Klarheit zu gewinnen?`;
+  }
+  return `Deine Motivationsfläche ist aktuell noch klein (${pct} %). Das ist eine wichtige Information – sie lädt ein, das Ziel oder den Weg nochmals zu reflektieren. Besonders „${minName}" (Wert: ${minVal}) ist niedrig. Passt das Ziel wirklich? Welche Bedingungen müssten sich ändern?`;
+}
+
+/* ═══════════════════════════════════════════════════
+   SVG INTERACTION (click & drag on axes)
+═══════════════════════════════════════════════════ */
+let activeDragAxis = -1;
+
+function svgCoordsFromClient(cx, cy) {
+  const svg  = document.getElementById('svgDiagram');
+  const rect = svg.getBoundingClientRect();
+  const vb   = svg.viewBox.baseVal;
+  return {
+    x: (cx - rect.left) * (vb.width  / rect.width),
+    y: (cy - rect.top)  * (vb.height / rect.height)
+  };
+}
+
+function nearestAxis(x, y) {
+  let best = -1, bestDist = Infinity;
+  AXES.forEach((ax, i) => {
+    const dx = Math.cos(ax.angle), dy = Math.sin(ax.angle);
+    const t  = (x - CX) * dx + (y - CY) * dy;
+    const px = CX + t * dx, py = CY + t * dy;
+    const d  = Math.hypot(x - px, y - py);
+    if (d < bestDist) { bestDist = d; best = i; }
+  });
+  return bestDist < 65 ? best : -1;
+}
+
+function valueFromCoords(axIdx, x, y) {
+  const ax = AXES[axIdx];
+  const t  = (x - CX) * Math.cos(ax.angle) + (y - CY) * Math.sin(ax.angle);
+  return Math.max(1, Math.min(10, Math.round(1 + (t / R) * 9)));
+}
+
+function setAxisValue(axIdx, val) {
+  document.getElementById(AXES[axIdx].sliderId).value = val;
+  update();
+}
+
+const svg = document.getElementById('svgDiagram');
+
+svg.addEventListener('mousedown', e => {
+  const {x, y} = svgCoordsFromClient(e.clientX, e.clientY);
+  const ax = nearestAxis(x, y);
+  if (ax >= 0) {
+    activeDragAxis = ax;
+    setAxisValue(ax, valueFromCoords(ax, x, y));
+    e.preventDefault();
+  }
+});
+
+document.addEventListener('mousemove', e => {
+  if (activeDragAxis < 0) return;
+  const {x, y} = svgCoordsFromClient(e.clientX, e.clientY);
+  setAxisValue(activeDragAxis, valueFromCoords(activeDragAxis, x, y));
+});
+
+document.addEventListener('mouseup', () => { activeDragAxis = -1; });
+
+svg.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  const {x, y} = svgCoordsFromClient(t.clientX, t.clientY);
+  const ax = nearestAxis(x, y);
+  if (ax >= 0) {
+    activeDragAxis = ax;
+    setAxisValue(ax, valueFromCoords(ax, x, y));
+  }
+}, {passive: false});
+
+svg.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (activeDragAxis < 0) return;
+  const t = e.touches[0];
+  const {x, y} = svgCoordsFromClient(t.clientX, t.clientY);
+  setAxisValue(activeDragAxis, valueFromCoords(activeDragAxis, x, y));
+}, {passive: false});
+
+svg.addEventListener('touchend', () => { activeDragAxis = -1; }, {passive: false});
+
+/* ═══════════════════════════════════════════════════
+   MAIN UPDATE
+═══════════════════════════════════════════════════ */
+function getValues() {
+  return AXES.map(ax => parseInt(document.getElementById(ax.sliderId).value, 10));
+}
+
+function update() {
+  const vals = getValues();
+
+  // Sync displays
+  AXES.forEach((ax, i) => {
+    document.getElementById(ax.numId).textContent  = vals[i];
+    document.getElementById(ax.chipId).textContent = vals[i];
+  });
+
+  // Diagram
+  drawDiagram(vals);
+
+  // Results
+  const pct = calcPct(vals);
+  document.getElementById('pctDisplay').textContent = pct;
+  document.getElementById('barFill').style.width    = pct + '%';
+  document.getElementById('interpretation').textContent = interpret(pct, vals);
+}
+
+function resetValues() {
+  AXES.forEach(ax => { document.getElementById(ax.sliderId).value = 5; });
+  update();
+}
+
+/* ═══════════════════════════════════════════════════
+   WIRE UP SLIDERS
+═══════════════════════════════════════════════════ */
+AXES.forEach(ax => {
+  document.getElementById(ax.sliderId).addEventListener('input', update);
+});
+
+/* ═══════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════ */
+// Auto-fill date
+document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+
+// First render
+update();
+</script>
+</body>
+</html>
