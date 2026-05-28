@@ -435,7 +435,7 @@
 
   <!-- ── Ergebnis ── -->
   <div class="card results-card">
-    <div class="card-title">📊 Meine Motivationsfläche</div>
+    <div class="card-title">Meine Motivation</div>
 
     <div class="result-row">
       <div class="result-pct">
@@ -445,7 +445,7 @@
         <div class="bar-track">
           <div class="bar-fill" id="barFill" style="width:0%"></div>
         </div>
-        <div class="bar-label">der maximalen Motivationsfläche</div>
+        <div class="bar-label">der maximalen Motivation</div>
       </div>
     </div>
 
@@ -463,10 +463,6 @@
         <div class="val-chip-num" id="chipD">5</div>
       </div>
     </div>
-
-    <div class="interpretation" id="interpretation">
-      Trage deine Werte ein, um deine persönliche Motivationsfläche zu berechnen.
-    </div>
   </div>
 
   <div class="actions">
@@ -476,7 +472,7 @@
 
   <div class="attribution">
     Motivationstrias nach Tom Küchler &nbsp;·&nbsp;
-    <a href="https://urldefense.com/v3/__https://www.potenzialentfaltung.org/motivationstrias/__;!!PkhW2ThN!ZSGgbBoxukiDtcfIwMilJJAmX4kC4zSywZHn8YK-YMij_Mr3HcdQetR52A0GMUzZcI2sV406jJ0Lv2Zrb2VNY9ppYurKcwiTE1vvEg$" target="_blank">potenzialentfaltung.org</a>
+    <a href="https://urldefense.com/v3/__https://www.potenzialentfaltung.org/motivationstrias/__;!!PkhW2ThN!ei3-Iwm9F0c_h1Ra-j9onv8Ks6Rwt89Hzhlb4nRsi0ARpDmdhSj2iMz4gg1cd3Xekeq3G7ut2L8_eHkSCHs_hnjzMhnV3tkORe192Q$" target="_blank">potenzialentfaltung.org</a>
   </div>
 
 </div><!-- /page -->
@@ -690,28 +686,8 @@ function drawDiagram(vals) {
    CALCULATION
 ═══════════════════════════════════════════════════ */
 function calcPct(vals) {
-  const pts    = vals.map((v, i) => axisPoint(i, v));
-  const maxPts = [0,1,2].map(i => axisPoint(i, 10));
-  const area    = triArea(pts[0], pts[1], pts[2]);
-  const maxArea = triArea(maxPts[0], maxPts[1], maxPts[2]);
-  return maxArea > 0 ? Math.round(area / maxArea * 100) : 0;
-}
-
-function interpret(pct, vals) {
-  const minVal  = Math.min(...vals);
-  const minIdx  = vals.indexOf(minVal);
-  const minName = AXES[minIdx].label.charAt(0) + AXES[minIdx].label.slice(1).toLowerCase();
-
-  if (pct >= 80) {
-    return `Deine Motivationsfläche ist sehr groß (${pct} %). Alle drei Aspekte sind stark ausgeprägt – das deutet auf eine hohe Wahrscheinlichkeit hin, das Ziel zu erreichen. Prima Ausgangslage! Was brauchst du als nächsten Schritt?`;
-  }
-  if (pct >= 55) {
-    return `Deine Motivationsfläche ist gut (${pct} %). Eine Veränderung erscheint wahrscheinlich. Besonders der Bereich „${minName}" (Wert: ${minVal}) bietet noch Entwicklungspotenzial. Was könnte diesen Wert auf die nächste Stufe heben?`;
-  }
-  if (pct >= 30) {
-    return `Deine Motivationsfläche ist mittelgroß (${pct} %). Es lohnt sich, alle drei Aspekte zu beleuchten – besonders „${minName}" (Wert: ${minVal}). Was wäre ein erster kleiner Schritt, um hier mehr Klarheit zu gewinnen?`;
-  }
-  return `Deine Motivationsfläche ist aktuell noch klein (${pct} %). Das ist eine wichtige Information – sie lädt ein, das Ziel oder den Weg nochmals zu reflektieren. Besonders „${minName}" (Wert: ${minVal}) ist niedrig. Passt das Ziel wirklich? Welche Bedingungen müssten sich ändern?`;
+  const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+  return Math.round(avg / 10 * 100);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -816,7 +792,6 @@ function update() {
   const pct = calcPct(vals);
   document.getElementById('pctDisplay').textContent = pct;
   document.getElementById('barFill').style.width    = pct + '%';
-  document.getElementById('interpretation').textContent = interpret(pct, vals);
 }
 
 function resetValues() {
